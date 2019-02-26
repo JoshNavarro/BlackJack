@@ -57,19 +57,38 @@ class Hand():
         '''
         Add a single card to the players hand
         '''
-        pass
+        self.cards.append(card)
+        self.value += values[card.rank]
 
     def adjust_for_ace(self):
+        self.aces += 1
+        self.value -= 10
+
+class Chips():
+    '''
+    A class to acount for a player's starting chips, bets, and ongoing winnings
+    '''
+    def __init__(self):
+        self.total = 100 # Change this value for starting value or take a user input
+        self.bet = 0
+
+    def win_bet(self):
         pass
+
+    def lose_bet(self):
+        pass
+
+def show_all(player,dealer):
+    pass
 
 def main():
     deck = Deck()
-    print(deck)
     deck.shuffle()
-    print("\n\nDeck has been shuffled\n")
-    print(deck)
-    print(deck.deal())
-    print(deck)
+    player1 = Hand()
+    player1.add_card(deck.deal())
+    player1.add_card(deck.deal())
+    print('Player1 hand: ' + ','.join(map(str,player1.cards)))
+    print('Player1 value: ' + str(player1.value))
 
 if __name__ == '__main__':
 	main()
