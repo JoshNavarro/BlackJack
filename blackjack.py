@@ -61,6 +61,9 @@ class Hand():
         self.value += values[card.rank]
 
     def adjust_for_ace(self):
+    	'''
+    	Adjust player's value if an ace is in there hand
+    	'''
         self.aces += 1
         self.value -= 10
 
@@ -73,10 +76,16 @@ class Chips():
         self.bet = 0
 
     def win_bet(self):
-        pass
+    	'''
+    	Adjust player total chips if bet is one
+    	'''
+        self.total += self.bet
 
     def lose_bet(self):
-        pass
+    	'''
+    	Adjust player total chips if bet is lost
+    	'''
+        self.total -= self.bet
 
 def show_all(player,dealer):
     pass
