@@ -59,13 +59,15 @@ class Hand():
         '''
         self.cards.append(card)
         self.value += values[card.rank]
+        if card.rank == 'Ace':
+            self.aces += 1
 
     def adjust_for_ace(self):
-    	'''
-    	Adjust player's value if an ace is in there hand
-    	'''
-        self.aces += 1
+        '''
+        Adjust player's value if an ace is in there hand
+        '''
         self.value -= 10
+        self.aces -= 1
 
 class Chips():
     '''
@@ -76,16 +78,52 @@ class Chips():
         self.bet = 0
 
     def win_bet(self):
-    	'''
-    	Adjust player total chips if bet is one
-    	'''
+        '''
+        Adjust player total chips if bet is one
+        '''
         self.total += self.bet
 
     def lose_bet(self):
-    	'''
-    	Adjust player total chips if bet is lost
-    	'''
+        '''
+        Adjust player total chips if bet is lost
+        '''
         self.total -= self.bet
+
+def take_bet(player_chips):
+    '''
+    Ask the user for a bet
+    Input: Players chips
+    Output: Bet amount
+    '''
+    # Check to see if user input is a number
+    while True:
+        try:
+            bet = int(input("Place your bet: "))
+        except:
+            print("Please enter a number.")
+            continue
+        else:
+            # Check that player total does not exceed bet amount
+            if bet > player_chips.total:
+                print(f"Amount cannot be covered. Total chips: {player_chips.total}")
+                continue
+            else:
+                print(f'Bet accepted.')
+                break
+    return bet
+    
+def hit(deck,hand):
+    '''
+    Add card to player/dealer hand
+    Input: current deck and player hand
+    '''
+    # Deal one card off the deck
+    card = deck.deal()
+    # Add card to hand
+    hand.add_card(card)
+    # Check if card was an Ace
+    if hand.aces > 0 and hand.value > 21:
+        hand.adjust_for_ace()
 
 def show_all(player,dealer):
     pass
@@ -94,10 +132,16 @@ def main():
     deck = Deck()
     deck.shuffle()
     player1 = Hand()
-    player1.add_card(deck.deal())
-    player1.add_card(deck.deal())
+    
+    hit(deck, player1)
+    hit(deck, player1)
+    hit(deck, player1)
+    hit(deck, player1)
     print('Player1 hand: ' + ','.join(map(str,player1.cards)))
     print('Player1 value: ' + str(player1.value))
-
+'''
+    player1_chips = Chips()
+    bet = take_bet(player1_chips)
+'''
 if __name__ == '__main__':
 	main()
