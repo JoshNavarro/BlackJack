@@ -147,23 +147,29 @@ def hit_or_stand(deck,hand):
         playing = False
 
 def show_some(player, dealer):
-    pass
+    print('Dealer hand: ????????, ' + ','.join(map(str,dealer.cards[1:])))
+    print('Player hand: ' + ','.join(map(str,player.cards)))
 
 def show_all(player,dealer):
-    pass
+    print('Dealer hand: ' + ','.join(map(str,dealer.cards)))
+    print('Player hand: ' + ','.join(map(str,player.cards)))
 
 def main():
     deck = Deck()
     deck.shuffle()
     player1 = Hand()
+    dealer = Hand()
     
     hit(deck, player1)
+    hit(deck, dealer)
     hit(deck, player1)
-    hit(deck, player1)
-    hit(deck, player1)
+    hit(deck, dealer)
+    show_some(player1, dealer)
+    show_all(player1, dealer)
+'''
     print('Player1 hand: ' + ','.join(map(str,player1.cards)))
     print('Player1 value: ' + str(player1.value))
-'''
+
     player1_chips = Chips()
     bet = take_bet(player1_chips)
 '''
