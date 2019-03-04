@@ -125,6 +125,30 @@ def hit(deck,hand):
     if hand.aces > 0 and hand.value > 21:
         hand.adjust_for_ace()
 
+def hit_or_stand(deck,hand):
+    '''
+    Ask player if they want to hit or stand
+    '''
+    global playing
+
+    while True:
+        try:
+            choice = int(input("Hit (1) or Stand (2): "))
+        except:
+            continue
+        else:
+            if choice not in (1,2):
+                continue
+            else:
+                break
+    if choice == 1:
+        hit(deck, hand)
+    else:
+        playing = False
+
+def show_some(player, dealer):
+    pass
+
 def show_all(player,dealer):
     pass
 
