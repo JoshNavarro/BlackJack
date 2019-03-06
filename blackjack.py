@@ -89,11 +89,16 @@ class Chips():
         '''
         self.total -= self.bet
 
+    def change_bet(self,bet):
+        '''
+        Adjust mutable bet amount
+        '''
+        self.bet = bet
+
 def take_bet(player_chips):
     '''
     Ask the user for a bet
     Input: Players chips
-    Output: Bet amount
     '''
     # Check to see if user input is a number
     while True:
@@ -108,9 +113,9 @@ def take_bet(player_chips):
                 print(f"Amount cannot be covered. Total chips: {player_chips.total}")
                 continue
             else:
-                print(f'Bet accepted.')
+                player_chips.change_bet(bet)
+                print(f'Bet accepted.\n')
                 break
-    return bet
     
 def hit(deck,hand):
     '''
@@ -147,29 +152,93 @@ def hit_or_stand(deck,hand):
         playing = False
 
 def show_some(player, dealer):
+    '''
+    Display player's hand and dealer hand minus first card
+    '''
     print('Dealer hand: ????????, ' + ','.join(map(str,dealer.cards[1:])))
-    print('Player hand: ' + ','.join(map(str,player.cards)))
+    print('Player hand: ' + ','.join(map(str,player.cards)) + '\n')
 
 def show_all(player,dealer):
+    '''
+    Display player's and dealer's hands
+    '''
     print('Dealer hand: ' + ','.join(map(str,dealer.cards)))
-    print('Player hand: ' + ','.join(map(str,player.cards)))
+    print('Player hand: ' + ','.join(map(str,player.cards)) + '\n')
+
+def player_busts(player_chips):
+    player_chips.lose_bet()
+    print("Player has busted.\n")
+
+def player_wins(player_chips):
+        player_chips.win_bet()
+        print('Player has won!\n')
+
+def dealer_busts():
+    print("Dealer busts.\n")
+
+def dealer_wins(player_chips):
+    player_chips.lose_bet()
+    print("Dealer has won.\n")
+
+def push():
+    print("Push.\n")
+
+def replay(player_chips):
+    if player_chips.total <= 0:
+        return False
+    while True:
+        replay = input("Would you like to play again? Enter Yes or No: ")
+        if replay.lower() == "yes" or replay.lower() == "no":
+            break
+    return replay.lower() == 'yes'
 
 def main():
-    deck = Deck()
-    deck.shuffle()
-    player1 = Hand()
-    dealer = Hand()
-    
-    hit(deck, player1)
-    hit(deck, dealer)
-    hit(deck, player1)
-    hit(deck, dealer)
-    show_some(player1, dealer)
-    show_all(player1, dealer)
-'''
-    print('Player1 hand: ' + ','.join(map(str,player1.cards)))
-    print('Player1 value: ' + str(player1.value))
+    player_chips = Chips()
+    global playing
+    print("\nWelcome to BlackJack! Goodluck and have fun!\n")
 
+    while True:
+        playing = True
+        deck = Deck()
+        deck.shuffle()
+        player = Hand()
+        dealer = Hand()
+        
+        hit(deck, player)
+        hit(deck, dealer)
+        hit(deck, player)
+        hit(deck, dealer)
+
+        print(f"Player chips: {player_chips.total}")
+        take_bet(player_chips)
+        show_some(player, dealer)
+
+        while playing:
+            hit_or_stand(deck, player)
+            show_some(player, dealer)
+            if player.value > 21:
+                break
+        if player.value <= 21:
+            while dealer.value < 17:
+                hit(deck, dealer)
+            show_all(player, dealer)
+            if dealer.value > 21:
+                dealer_busts()
+                player_wins(player_chips)
+            elif player.value > dealer.value:
+                player_wins(player_chips)
+            elif player.value == dealer.value:
+                push()
+            else:
+                dealer_wins(player_chips)
+        else:
+            show_all(player, dealer)
+            player_busts(player_chips)
+        print(f"Player chips: {player_chips.total}")
+        if not replay(player_chips):
+            break
+    print("Thank you for playing!\n")
+'''
     player1_chips = Chips()
     bet = take_bet(player1_chips)
 '''
