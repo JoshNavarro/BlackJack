@@ -1,5 +1,12 @@
+# Creator   : Joshua Navarro
+# Date      : 03/7/2019
+
+'''
+This is a simple text-based game version of blackjack with betting
+'''
 import random
 
+# global variables to help create a deck of cards
 suits = ['Spades', 'Clubs', 'Diamonds', 'Hearts']
 ranks = ['Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Jack', 'Queen', 'King', 'Ace']
 values = {'Two':2, 'Three':3, 'Four':4, 'Five':5, 'Six':6, 'Seven':7, 'Eight':8, 'Nine':9, 'Ten':10,
@@ -166,62 +173,104 @@ def show_all(player,dealer):
     print('Player hand: ' + ','.join(map(str,player.cards)) + '\n')
 
 def player_busts(player_chips):
+    '''
+    Player loses chips due to bust
+    '''
     player_chips.lose_bet()
     print("Player has busted.\n")
 
 def player_wins(player_chips):
-        player_chips.win_bet()
-        print('Player has won!\n')
+    '''
+    Player wins bet
+    '''
+    player_chips.win_bet()
+    print('Player has won!\n')
 
 def dealer_busts():
+    '''
+    Dealer hand over 21
+    '''
     print("Dealer busts.\n")
 
 def dealer_wins(player_chips):
+    '''
+    Dealer hand better than player hand
+    '''
     player_chips.lose_bet()
     print("Dealer has won.\n")
 
 def push():
+    '''
+    Tie game
+    '''
     print("Push.\n")
 
 def replay(player_chips):
+    '''
+    Ask player if they want to play again if possible
+    '''
     if player_chips.total <= 0:
         return False
     while True:
         replay = input("Would you like to play again? Enter Yes or No: ")
-        if replay.lower() == "yes" or replay.lower() == "no":
+        if replay[0].lower() == "y" or replay[0].lower() == "n":
             break
-    return replay.lower() == 'yes'
+    return replay[0].lower() == 'y'
 
 def main():
+    '''
+    Full game running with logic
+    '''
+    # Set up the Player's chips
     player_chips = Chips()
     global playing
+
+    # Print an opening statement
     print("\nWelcome to BlackJack! Goodluck and have fun!\n")
 
+    # Start the game
     while True:
         playing = True
+        # Create a deck and shuffle it, player hand, and dealer hand
         deck = Deck()
         deck.shuffle()
         player = Hand()
         dealer = Hand()
         
+        # Deal out 2 cards to player and dealer
         hit(deck, player)
         hit(deck, dealer)
         hit(deck, player)
         hit(deck, dealer)
 
+        # Ask the player to bet
         print(f"Player chips: {player_chips.total}")
         take_bet(player_chips)
+
+        # Show cards but not all
         show_some(player, dealer)
 
+        # Start playing blackjack
         while playing:
+            # Ask player to hit or stand
             hit_or_stand(deck, player)
+
+            # Show cards but not all
             show_some(player, dealer)
+
+            # If player has busted break out of loop
             if player.value > 21:
                 break
+
+        # If player hasn't busted, deal dealer cards until reaches 17
         if player.value <= 21:
             while dealer.value < 17:
                 hit(deck, dealer)
+
+            # Show player final cards
             show_all(player, dealer)
+
+            # Play winning scenarios based on final cards
             if dealer.value > 21:
                 dealer_busts()
                 player_wins(player_chips)
@@ -234,13 +283,14 @@ def main():
         else:
             show_all(player, dealer)
             player_busts(player_chips)
+
+        # Show player remaining chips
         print(f"Player chips: {player_chips.total}")
+
+        # Ask to play agin
         if not replay(player_chips):
             break
     print("Thank you for playing!\n")
-'''
-    player1_chips = Chips()
-    bet = take_bet(player1_chips)
-'''
+
 if __name__ == '__main__':
 	main()
